@@ -1,122 +1,98 @@
-# RainScope ML — Australian Rainfall Prediction & Model Evaluation
+# RainScope ML — Australian Rainfall Prediction
 
-A reproducible tabular machine-learning study and interactive dashboard by **Bola Maged Ramses Nessim**. Compare classical models and recent tabular architectures on a chronological Australian weather holdout, then inspect errors, probability quality and compute requirements.
+Compare classical machine learning, **TabM** and **TabICLv2** for next-day rain classification from historical Australian weather observations.
 
-**Question:** given a historical daily weather record, will the next recorded day meet the dataset's rain threshold? This is a research portfolio project, not an operational weather service.
+**By Bola Maged Ramses Nessim** · [Setup & dashboard](docs/GETTING_STARTED.md) · [Detailed results](reports/RESULTS.md) · [Source attribution](docs/ATTRIBUTION.md)
 
-The project rebuilds the evaluation and application around an earlier Australian-rain repository. The original author and licence are explicitly preserved in [attribution](docs/ATTRIBUTION.md). The new contribution is the implementation and experiments here, not authorship of the dataset or the underlying model architectures.
+## Model results
 
-## What makes this a data-science project
+**TabM led this comparison:** accuracy **83.56%**, ROC-AUC **0.893**, average precision **0.756**, and rain-class F1 **0.675**.
 
-- Schema/data audit, missing-label policy and station/date duplicate checks.
-- Global chronological splits with two-day boundary embargoes, rather than shuffled rows.
-- Training-fitted preprocessing, safe category handling and deterministic seasonal features.
-- Validation-only model selection by average precision and threshold selection by F1.
-- No-skill climatology, logistic regression, random forest, histogram gradient boosting, **TabM** and **TabICLv2**.
-- Precision/recall, F1, ROC-AUC, average precision, Brier loss, reliability curves, station slices and month-cluster uncertainty intervals.
-- Fit/predict timings, process RAM/CPU and PyTorch GPU allocation.
-- Tests, reproducible environment, saved local pipelines and a dashboard that reads recorded reports.
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC | Average precision |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| **TabM** | 83.56% | 0.616 | 0.747 | 0.675 | 0.893 | 0.756 |
+| Histogram gradient boosting | 83.29% | 0.615 | 0.720 | 0.664 | 0.883 | 0.738 |
+| Random forest | 82.17% | 0.596 | 0.688 | 0.639 | 0.868 | 0.707 |
+| Logistic regression | 82.12% | 0.594 | 0.694 | 0.640 | 0.864 | 0.695 |
+| TabICLv2 (3k context) | 80.62% | 0.560 | 0.710 | 0.626 | 0.858 | 0.687 |
+| Climatology baseline | 22.89% | 0.229 | 1.000 | 0.373 | 0.500 | 0.229 |
 
-## Architecture
+All results use **25,974 test observations from 2016–2017**. Model and threshold were selected on 2015 validation data before the test pass. TabICLv2 uses a 3,000-row training context; other models use 98,892 training rows. Precision, recall and F1 refer to **rain**. The climatology baseline's validation-selected threshold predicts every row as rain; its accuracy is not majority-class accuracy.
 
-```mermaid
-flowchart TD
-    A[Versioned source CSV + SHA-256] --> B[Schema / target / duplicate audit]
-    B --> C{Chronological partition + embargo}
-    C --> D[Training: before 2015]
-    C --> E[Validation: 2015]
-    C --> F[Final test: 2016 onward]
-    D --> G[Fit imputation / category encoders / scaling]
-    G --> H[Classical models + TabM + TabICLv2]
-    E --> I[Select model by AP / threshold by F1]
-    H --> I
-    I --> J[Freeze model and threshold]
-    F --> K[One final holdout evaluation]
-    J --> K
-    K --> L[Curves / station errors / uncertainty / resources]
-    L --> M[Streamlit comparison dashboard]
-    J --> N[Local saved pipeline]
-    O[New compatible weather CSV] --> N
-    N --> P[Rain probabilities + CSV export]
-```
+![Six-metric dashboard comparing average precision, ROC-AUC, F1, precision, recall and Brier loss](reports/figures/metric_dashboard.png)
 
-Validation is used for selection, not training preprocessing. TabM also uses validation for early stopping. TabICLv2's context is sampled strictly from training and limited to fit local hardware. Its smaller context budget is disclosed in the comparison, rather than presented as equal-data training.
+Higher is better for AP, ROC-AUC, F1, precision and recall; **lower is better for Brier loss**. Orange highlights TabM.
 
-## Install and reproduce
+## Correlation heatmap
 
-Use an existing **Python 3.13** interpreter and a project-local virtual environment. GPU experiments need a compatible NVIDIA driver and a PyTorch CUDA build that supports the device; the reference workstation has a GTX 1660 Ti (6 GB).
+Pearson correlations for numeric weather features and the rain target, calculated on **training observations only** using pairwise non-missing values. Correlation does not establish causation.
 
-```bash
-git clone https://github.com/bmaged23/rainscope-ml.git
-cd rainscope-ml
-python3.13 -m venv .venv
-source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-```
+![Annotated training-data correlation heatmap](reports/figures/correlation_heatmap.png)
 
-Install the exact reference CPU/application dependencies from `requirements.txt`. For the modern GPU experiments, install the CUDA PyTorch build and modern dependencies documented in `requirements-modern.txt`. A complete reference-environment snapshot is in `requirements-lock.txt`; the smaller base/modern/dev files pin direct dependencies. Do not mix a CUDA 13-only wheel with an unsupported GPU/driver.
+## Precision–recall, ROC and probability reliability
 
-```bash
-python -m pip install -r requirements.txt
-# For the default six-model GPU experiment:
-python -m pip install -r requirements-modern.txt
-python -m pip install -r requirements-dev.txt
-python -m pip install -e . --no-deps
-python scripts/download_data.py
-python -m rainscope.train --root .
-python -m streamlit run app.py
-# Optional batch CLI (synthetic example inputs, not evaluation data):
-python -m rainscope.predict data/example_weather.csv --output predictions.csv
-```
+![TabM precision–recall, ROC and probability reliability on the final holdout](reports/figures/tabm_diagnostics.png)
 
-Check `config.json` before running: models, thread count, temporal boundaries, threshold candidates, bootstrap repetitions, neural epochs and foundation-model context size are explicit. To run CPU baselines only, remove `tabm` and `tabicl_v2` from the model list. Modern checkpoint downloading occurs on first use and requires internet access. Never add validation/test labels to a foundation model's context.
+The precision–recall curve shows rain detection versus false alarms; ROC shows ranking across thresholds. The reliability diagram compares predicted probabilities with observed rain frequencies.
 
-```bash
-python -m pytest
-# Optional validation-only processing sensitivity report:
-python scripts/check_processing.py
-```
+## TabM confusion matrix
 
-## Results and model selection
+At the validation-selected threshold of **0.30**, TabM correctly identifies **4,439 rainy records** and **17,264 non-rainy records**; it misses **1,507 rainy records** and produces **2,764 false alarms**.
 
-| Model | Test AP | ROC-AUC | Rain F1 |
-| --- | --- | --- | --- |
-| climatology | 0.229 | 0.500 | 0.373 |
-| logistic | 0.695 | 0.864 | 0.640 |
-| random_forest | 0.707 | 0.868 | 0.639 |
-| hist_gradient_boosting | 0.738 | 0.883 | 0.664 |
-| tabm | 0.756 | 0.893 | 0.675 |
-| tabicl_v2 | 0.687 | 0.858 | 0.626 |
+![TabM confusion matrix with actual counts](reports/figures/confusion_matrix.png)
 
-**TabM was selected by validation before the test pass.** The comparison covers 25,974 holdout observations. TabICLv2 uses only 3,000 training-context rows due to the reference GPU budget; other candidates use 98,892 training observations. This is a single-seed, bounded-budget comparison.
+## Learning curve
 
-![Recorded model diagnostics](reports/figures/model_comparison.png)
+Recorded training and validation losses across **40 epochs**. The dashed line marks the checkpoint retained by validation log loss; test data was not used for early stopping. Training loss is a batch mean measured with training-time dropout enabled.
 
-See [recorded results](reports/RESULTS.md), the [validation table](reports/validation_leaderboard.csv), [test diagnostics](reports/test_leaderboard.csv) and [resource measurements](reports/resources.json) after the experiment completes. A candidate's failure is recorded, not silently substituted with another model. A newer architecture is not assumed to outperform classical baselines.
+![TabM training and validation loss with retained checkpoint](reports/figures/learning_curve.png)
 
-The final test period must not be reused to tune features, hyperparameters or thresholds. Public dataset pretraining exposure of tabular foundation models cannot be ruled out. A larger, geographically held-out and multi-seed study would be needed for stronger claims.
+## Performance across months and stations
 
-## Project layout
+Monthly AP/F1 uses the **same fixed 0.30 threshold** throughout the final test period. The station panel displays the five lowest and highest AP slices, with sample counts. Station scores also depend on local rain prevalence; these are descriptive diagnostics, not an unseen-station evaluation.
 
-| Path | Purpose |
-| --- | --- |
-| `src/rainscope/data.py` | Schema, deterministic features, audit and partitions |
-| `models.py`, `modern.py` (inside package) | Classical pipelines and recent-model adapters |
-| `evaluation.py`, `train.py`, `report.py` | Metrics, resources, experiment orchestration and plots |
-| `app.py` | Dashboard and local batch inference |
-| `data/example_weather.csv` | Two invented weather inputs for UI/CLI testing, not benchmark observations |
-| `config.json` | Frozen experiment settings |
-| `scripts/download_data.py` | Exact-snapshot download with fingerprint check |
-| `reports/` | Shareable aggregate experiment evidence |
-| `reports/private/` | Local per-record predictions, excluded from Git |
-| `artifacts/`, `data/raw/` | Local pipelines and observations, excluded from Git |
-| `tests/` | Boundary leakage, target exclusion, categories and schema checks |
+![TabM monthly scores and station-level error analysis](reports/figures/error_analysis.png)
 
-## Data and practical limits
+## Feature importance
 
-Missing targets are excluded rather than invented. Numeric feature missingness is imputed using training medians with indicators; unknown categories are supported. Dates become cyclical month features, not arbitrary ordinal labels. Within-day pressure/humidity differences use no future record. Plausible extremes are retained rather than clipped using statistics from all partitions.
+Validation-only permutation importance measures the decrease in average precision when a feature is shuffled. **Humidity at 3pm, wind-gust speed, station location and pressure change** had the largest drops. Correlated features can share predictive information.
 
-Many station locations appear in multiple periods, so temporal results do not establish unseen-station performance. Daily measurements can accumulate through midnight: feature availability must be established before calling this a morning or real-time forecast. Historical recorded probabilities are not proof of calibration in future conditions.
+![Validation feature importance ranked by average precision decrease](reports/figures/feature_importance.png)
 
-Raw data, downloaded weights, local environments and private predictions are excluded from version control. Model artifacts are generated by training. The GPL-3.0 code licence does not replace independent dataset/checkpoint terms; see [attribution and lineage](docs/ATTRIBUTION.md).
+## Data quality and processing
+
+**145,460 raw records · 49 stations · 3,267 missing targets excluded.** Sunshine is **48.0% missing** and evaporation **43.2% missing**. Numeric inputs use training-fitted median imputation with missingness indicators; categorical encoders are fitted only on training data.
+
+![Weather-feature missingness and rain prevalence by year](reports/figures/data_quality.png)
+
+A separate logistic-regression check on validation data found:
+
+| Processing variant | Validation average precision |
+| --- | ---: |
+| Configured features and missingness indicators | 0.69885 |
+| Without missingness indicators | 0.69525 |
+| Without derived seasonal/pressure/humidity features | 0.69575 |
+| Without numeric columns above 40% training missingness | 0.69683 |
+
+These are modest, single-seed sensitivity results for logistic regression; they do not prove that every model benefits equally. [Recorded values](reports/preprocessing_sensitivity.csv)
+
+## Measured runtime
+
+Reference GPU: **NVIDIA GTX 1660 Ti, 6 GB**. These are measured in-process wall times, not deployment latency guarantees.
+
+| Model | Fit time | Predict 25,974 rows |
+| --- | ---: | ---: |
+| **TabM** | 26.01 s | 0.099 s |
+| Histogram gradient boosting | 5.73 s | 0.250 s |
+| Random forest | 10.62 s | 0.221 s |
+| Logistic regression | 2.23 s | 0.064 s |
+| TabICLv2 (3k context) | 1.10 s | 139.442 s |
+| Climatology baseline | 1.89 s | 0.194 s |
+
+TabICLv2 performs in-context computation during prediction, so its short fit time does not mean cheap inference. [RAM, CPU and PyTorch-memory measurements](reports/resources.json) include interpreter/resident-model overhead; they are not isolated per-model memory requirements.
+
+## Reproduce and explore
+
+[Installation, training and dashboard](docs/GETTING_STARTED.md) · [Configuration](config.json) · [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Model card](docs/MODEL_CARD.md)
+
+This is a single-seed historical study with shared stations across time, not an operational weather service or an unseen-station benchmark. The rebuilt implementation preserves the [original repository's attribution](docs/ATTRIBUTION.md) and [GPL-3.0 licence](LICENSE); raw observations and model weights are not republished.
