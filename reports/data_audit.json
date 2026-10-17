@@ -1,0 +1,57 @@
+{
+  "sha256": "573fd715cd69fcacc4df32024d823b450ae3edaae7e8ff2eeb623adbed424014",
+  "raw_rows": 145460,
+  "missing_percent": {
+    "Date": 0.0,
+    "Location": 0.0,
+    "MinTemp": 1.021,
+    "MaxTemp": 0.867,
+    "Rainfall": 2.242,
+    "Evaporation": 43.167,
+    "Sunshine": 48.01,
+    "WindGustDir": 7.099,
+    "WindGustSpeed": 7.056,
+    "WindDir9am": 7.264,
+    "WindDir3pm": 2.907,
+    "WindSpeed9am": 1.215,
+    "WindSpeed3pm": 2.105,
+    "Humidity9am": 1.825,
+    "Humidity3pm": 3.098,
+    "Pressure9am": 10.357,
+    "Pressure3pm": 10.331,
+    "Cloud9am": 38.422,
+    "Cloud3pm": 40.807,
+    "Temp9am": 1.215,
+    "Temp3pm": 2.481,
+    "RainToday": 2.242,
+    "RainTomorrow": 2.246
+  },
+  "excluded_missing_or_invalid_targets": 3267,
+  "exact_duplicates_removed": 0,
+  "embargo_rows_excluded": 191,
+  "splits": {
+    "train": {
+      "rows": 98892,
+      "start": "2007-11-01",
+      "end": "2014-12-29",
+      "rain_rate": 0.22523561056506086,
+      "stations": 49
+    },
+    "validation": {
+      "rows": 17136,
+      "start": "2015-01-01",
+      "end": "2015-12-29",
+      "rain_rate": 0.21259337068160597,
+      "stations": 49
+    },
+    "test": {
+      "rows": 25974,
+      "start": "2016-01-01",
+      "end": "2017-06-25",
+      "rain_rate": 0.22892122892122893,
+      "stations": 49
+    }
+  },
+  "unseen_validation_stations": [],
+  "unseen_test_stations": []
+}

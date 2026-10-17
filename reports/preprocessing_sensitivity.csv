@@ -1,0 +1,5 @@
+variant,dropped_features,validation_average_precision,validation_brier,validation_f1_at_0_5
+configured_features,,0.698847355333088,0.10569731473745964,0.5849088171323407
+without_missing_indicators,,0.6952529486699726,0.10650363408288151,0.5729237002025659
+without_derived_features,"HumidityChange, MonthCos, MonthSin, PressureChange",0.6957534458616772,0.10622269968805172,0.5785762256548019
+without_high_missing_numeric_features,Sunshine,0.6968276982624951,0.10625088385711609,0.5793862575050034

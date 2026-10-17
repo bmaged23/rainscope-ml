@@ -1,0 +1,33 @@
+{
+  "accuracy": 0.8355663355663355,
+  "balanced_accuracy": 0.8042727567883268,
+  "precision": 0.6162709981951965,
+  "recall": 0.746552304069963,
+  "f1": 0.6751844246710776,
+  "average_precision": 0.7564459602070798,
+  "roc_auc": 0.8930422694134703,
+  "brier": 0.10096573829650879,
+  "log_loss": 0.3261667490005493,
+  "confusion_matrix": [
+    [
+      17264,
+      2764
+    ],
+    [
+      1507,
+      4439
+    ]
+  ],
+  "month_cluster_intervals": {
+    "method": "month-cluster percentile bootstrap; descriptive temporal uncertainty",
+    "repeats": 200,
+    "average_precision": [
+      0.7245378953088429,
+      0.7838493076408038
+    ],
+    "f1": [
+      0.6531093720970296,
+      0.6942019862151516
+    ]
+  }
+}

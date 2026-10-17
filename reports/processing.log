@@ -1,0 +1,5 @@
+configured_features {'variant': 'configured_features', 'dropped_features': '', 'validation_average_precision': 0.698847355333088, 'validation_brier': 0.10569731473745964, 'validation_f1_at_0_5': 0.5849088171323407}
+without_missing_indicators {'variant': 'without_missing_indicators', 'dropped_features': '', 'validation_average_precision': 0.6952529486699726, 'validation_brier': 0.10650363408288151, 'validation_f1_at_0_5': 0.5729237002025659}
+without_derived_features {'variant': 'without_derived_features', 'dropped_features': 'HumidityChange, MonthCos, MonthSin, PressureChange', 'validation_average_precision': 0.6957534458616772, 'validation_brier': 0.10622269968805172, 'validation_f1_at_0_5': 0.5785762256548019}
+without_high_missing_numeric_features {'variant': 'without_high_missing_numeric_features', 'dropped_features': 'Sunshine', 'validation_average_precision': 0.6968276982624951, 'validation_brier': 0.10625088385711609, 'validation_f1_at_0_5': 0.5793862575050034}
+Descriptive logistic-regression ablation on validation only; final selection unchanged.

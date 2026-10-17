@@ -1,0 +1,83 @@
+{
+  "train": {
+    "rows": 98892,
+    "start": "2007-11-01",
+    "end": "2014-12-29",
+    "rain_rate": 0.22523561056506086,
+    "stations": 49
+  },
+  "validation": {
+    "rows": 17136,
+    "start": "2015-01-01",
+    "end": "2015-12-29",
+    "rain_rate": 0.21259337068160597,
+    "stations": 49
+  },
+  "test": {
+    "rows": 25974,
+    "start": "2016-01-01",
+    "end": "2017-06-25",
+    "rain_rate": 0.22892122892122893,
+    "stations": 49
+  }
+}
+Fitting climatology
+climatology validation AP=0.21259337068160597
+Fitting logistic
+logistic validation AP=0.698847355333088
+Fitting random_forest
+random_forest validation AP=0.7073697976069508
+Fitting hist_gradient_boosting
+hist_gradient_boosting validation AP=0.7331680742274841
+Fitting tabm
+TabM epoch 1: validation log loss=0.3374
+TabM epoch 2: validation log loss=0.3284
+TabM epoch 3: validation log loss=0.3229
+TabM epoch 4: validation log loss=0.3215
+TabM epoch 5: validation log loss=0.3217
+TabM epoch 6: validation log loss=0.3174
+TabM epoch 7: validation log loss=0.3149
+TabM epoch 8: validation log loss=0.3179
+TabM epoch 9: validation log loss=0.3143
+TabM epoch 10: validation log loss=0.3113
+TabM epoch 11: validation log loss=0.3116
+TabM epoch 12: validation log loss=0.3098
+TabM epoch 13: validation log loss=0.3086
+TabM epoch 14: validation log loss=0.3109
+TabM epoch 15: validation log loss=0.3080
+TabM epoch 16: validation log loss=0.3096
+TabM epoch 17: validation log loss=0.3070
+TabM epoch 18: validation log loss=0.3071
+TabM epoch 19: validation log loss=0.3086
+TabM epoch 20: validation log loss=0.3064
+TabM epoch 21: validation log loss=0.3067
+TabM epoch 22: validation log loss=0.3091
+TabM epoch 23: validation log loss=0.3070
+TabM epoch 24: validation log loss=0.3078
+TabM epoch 25: validation log loss=0.3078
+TabM epoch 26: validation log loss=0.3060
+TabM epoch 27: validation log loss=0.3087
+TabM epoch 28: validation log loss=0.3056
+TabM epoch 29: validation log loss=0.3071
+TabM epoch 30: validation log loss=0.3065
+TabM epoch 31: validation log loss=0.3046
+TabM epoch 32: validation log loss=0.3091
+TabM epoch 33: validation log loss=0.3049
+TabM epoch 34: validation log loss=0.3058
+TabM epoch 35: validation log loss=0.3043
+TabM epoch 36: validation log loss=0.3054
+TabM epoch 37: validation log loss=0.3039
+TabM epoch 38: validation log loss=0.3059
+TabM epoch 39: validation log loss=0.3039
+TabM epoch 40: validation log loss=0.3057
+tabm validation AP=0.7550001991004179
+Fitting tabicl_v2
+tabicl_v2 validation AP=0.6953764708233314
+Final test climatology
+Final test logistic
+Final test random_forest
+Final test hist_gradient_boosting
+Final test tabm
+Final test tabicl_v2
+Validation permutation importance
+Selected by validation: tabm test: {"accuracy": 0.8355663355663355, "balanced_accuracy": 0.8042727567883268, "precision": 0.6162709981951965, "recall": 0.746552304069963, "f1": 0.6751844246710776, "average_precision": 0.7564459602070798, "roc_auc": 0.8930422694134703, "brier": 0.10096573829650879, "log_loss": 0.3261667490005493, "confusion_matrix": [[17264, 2764], [1507, 4439]], "month_cluster_intervals": {"method": "month-cluster percentile bootstrap; descriptive temporal uncertainty", "repeats": 200, "average_precision": [0.7245378953088429, 0.7838493076408038], "f1": [0.6531093720970296, 0.6942019862151516]}}
