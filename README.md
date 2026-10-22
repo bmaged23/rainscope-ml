@@ -127,6 +127,8 @@ A local GPU run of 200 sequential HTTP requests (two synthetic records each) mea
 
 **Public repository: [bmaged23/rainscope-ml](https://hub.docker.com/r/bmaged23/rainscope-ml)** · Published tag: [`cpu`](https://hub.docker.com/r/bmaged23/rainscope-ml/tags?name=cpu)
 
+**Pull-and-run verified:** anonymous Docker Hub pull, new container with no model/data mounts, readiness and predictions passed on Linux amd64. [Verification record](reports/dockerhub_pull_test.json).
+
 The **CPU API image** includes the trained histogram-gradient-boosting model and its preprocessing. It does not require a model mount, dataset download or training at startup. Supported release target: **Linux amd64**, including compatible Windows Docker Desktop/WSL2 installations.
 
 ```bash
@@ -135,6 +137,14 @@ docker run -d --name rainscope -p 127.0.0.1:8000:8000 bmaged23/rainscope-ml:cpu
 ```
 
 Open **http://localhost:8000/docs** to submit observations. This runs the API, not the Streamlit dashboard, and it does not fetch live weather. [Docker Hub](https://hub.docker.com/r/bmaged23/rainscope-ml) · [Example request, checks and cleanup](docs/SERVING.md) · [Release verification status](reports/SERVING_RESULTS.md)
+
+## Tests, CI and image releases
+
+Run local checks with `python -m pip install -r requirements-dev.txt` and `python -m pytest`. GitHub Actions is configured to run lint/tests and build the CPU image, then check real predictions without model mounts on each push or pull request.
+
+A separate release workflow builds and tests an image before publishing it to Docker Hub, then pulls and tests the published commit tag. It requires the maintainer’s `DOCKERHUB_TOKEN` Actions secret, which is now configured. Local tests and the public CPU pull test passed; remote CI and automated delivery are verified separately on their published workflow runs.
+
+[CI/CD workflow and maintainer setup](docs/CI_CD.md) · [GitHub Actions](https://github.com/bmaged23/rainscope-ml/actions)
 
 ## Quick start — CPU
 

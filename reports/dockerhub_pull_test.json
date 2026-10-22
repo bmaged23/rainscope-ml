@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "model": {
+    "name": "hist_gradient_boosting",
+    "threshold": 0.3,
+    "model_sha256": "9e5df63c764c6f72c38db481d524612e7c5a70f7e86152875717515d7c31cd6e",
+    "max_batch_rows": 256,
+    "device": "cpu"
+  },
+  "example_predictions": [
+    {
+      "rain_probability": 0.02150893258072945,
+      "rain_prediction": "No"
+    },
+    {
+      "rain_probability": 0.9298779339230111,
+      "rain_prediction": "Yes"
+    }
+  ],
+  "checks": [
+    "readiness",
+    "bundled CPU model",
+    "two-record inference",
+    "empty request rejected",
+    "interactive docs",
+    "OpenAPI",
+    "metrics"
+  ],
+  "limitations": "Smoke test of the documented example; not a new predictive-accuracy evaluation or universal device guarantee."
+}

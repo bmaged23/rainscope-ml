@@ -1,0 +1,66 @@
+name: Publish verified CPU image
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+permissions:
+  contents: read
+concurrency:
+  group: dockerhub-cpu-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OMP_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+      IMAGE: bmaged23/rainscope-ml
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check publication configuration
+        env:
+          TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo 'Configure the DOCKERHUB_TOKEN repository secret before publishing.'
+            exit 1
+          fi
+      - name: Install test dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -e . --no-deps
+      - name: Lint and tests
+        run: |
+          python -m ruff check --select F src tests app.py scripts
+          python -m pytest
+      - name: Build the complete image
+        run: docker build --platform linux/amd64 -t "$IMAGE:cpu" -t "$IMAGE:cpu-$GITHUB_SHA" .
+      - name: Test the exact image before publishing
+        run: |
+          docker run -d --name rainscope-release -p 127.0.0.1:8000:8000 "$IMAGE:cpu"
+          python scripts/smoke_test_api.py
+          docker rm -f rainscope-release
+      - name: Sign in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: bmaged23
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Publish tested tags
+        run: |
+          docker push "$IMAGE:cpu-$GITHUB_SHA"
+          docker push "$IMAGE:cpu"
+      - name: Verify the registry image after publishing
+        run: |
+          docker pull "$IMAGE:cpu-$GITHUB_SHA"
+          docker run -d --name rainscope-release -p 127.0.0.1:8000:8000 "$IMAGE:cpu-$GITHUB_SHA"
+          python scripts/smoke_test_api.py
+      - name: Container logs and cleanup
+        if: always()
+        run: |
+          docker logs rainscope-release || true
+          docker rm -f rainscope-release || true
