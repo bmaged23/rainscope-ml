@@ -2,7 +2,7 @@
 
 Compare classical machine learning, **TabM** and **TabICLv2** for next-day rain classification from historical Australian weather observations.
 
-**By Bola Maged Ramses Nessim** · [Setup & dashboard](docs/GETTING_STARTED.md) · [Detailed results](reports/RESULTS.md) · [Source attribution](docs/ATTRIBUTION.md)
+**By Bola Maged Ramses Nessim** · [Docker Hub image](https://hub.docker.com/r/bmaged23/rainscope-ml) · [Setup & dashboard](docs/GETTING_STARTED.md) · [Detailed results](reports/RESULTS.md) · [Source attribution](docs/ATTRIBUTION.md)
 
 ## Model results
 
@@ -124,6 +124,8 @@ A local GPU run of 200 sequential HTTP requests (two synthetic records each) mea
 [Run the API and Docker demo](docs/SERVING.md) · [Measured HTTP latency and resources](reports/SERVING_RESULTS.md) · [Example request](deployment/example_request.json)
 
 ## Docker Hub — run without Python setup
+
+**Public repository: [bmaged23/rainscope-ml](https://hub.docker.com/r/bmaged23/rainscope-ml)** · Published tag: [`cpu`](https://hub.docker.com/r/bmaged23/rainscope-ml/tags?name=cpu)
 
 The **CPU API image** includes the trained histogram-gradient-boosting model and its preprocessing. It does not require a model mount, dataset download or training at startup. Supported release target: **Linux amd64**, including compatible Windows Docker Desktop/WSL2 installations.
 

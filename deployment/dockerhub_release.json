@@ -1,0 +1,14 @@
+{
+  "repository": "bmaged23/rainscope-ml",
+  "url": "https://hub.docker.com/r/bmaged23/rainscope-ml",
+  "public": true,
+  "published_tags": [
+    "cpu"
+  ],
+  "digest": "sha256:76c198dd1567004218dd93b0a0299cd8b0039495fe585e2a2b913c58a48d0b36",
+  "platform": "linux/amd64",
+  "compressed_size_bytes": 272025447,
+  "local_offline_prediction_test": "passed",
+  "bundled_model_holdout_verification": "passed",
+  "fresh_pull_smoke_test": "pending"
+}

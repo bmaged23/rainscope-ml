@@ -70,7 +70,7 @@ docker stop rainscope
 docker rm rainscope
 ```
 
-The public image is an API service, not the Streamlit dashboard or a live-weather downloader. Input observations must be supplied by the caller. `latest` refers to the same CPU release; use the `cpu` tag to make the intended runtime explicit.
+The public image is an API service, not the Streamlit dashboard or a live-weather downloader. Input observations must be supplied by the caller. Use the published `cpu` tag; no `latest` or GPU tag is claimed available.
 
 [Docker Hub repository](https://hub.docker.com/r/bmaged23/rainscope-ml). Publication and pull verification are recorded in [serving results](../reports/SERVING_RESULTS.md); do not assume a pending tag is available until that record says it passed.
 
