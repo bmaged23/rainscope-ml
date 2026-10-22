@@ -11,7 +11,7 @@
 
 The container test uses `scripts/smoke_test_api.py`. It checks actual predictions rather than declaring success just because the server process started.
 
-**Current status:** local tests, offline container inference and the public Docker Hub pull test passed. The new workflow must be pushed and pass on its actual GitHub commit before remote CI is described as verified. Older successful Actions runs do not verify new changes.
+**Verified:** [CI](https://github.com/bmaged23/rainscope-ml/actions/runs/39844918468) passed code tests and complete-container prediction checks on code commit `0549f6b`. [Docker Hub delivery](https://github.com/bmaged23/rainscope-ml/actions/runs/39844973128) passed build, tests, authentication, publication and post-pull inference on the same commit. See `deployment/ci_delivery_verification.json` for the image digest and scope. GPU container verification remains separate and unfinished.
 
 ## Continuous delivery to Docker Hub
 
@@ -39,7 +39,7 @@ The local Docker Desktop sign-in does not authenticate GitHub-hosted runners. Fo
 3. Store the token under **`DOCKERHUB_TOKEN`**. Do not commit it or paste it into the README or an issue.
 4. Push the workflow and run it manually once. Confirm all stages pass before relying on tag-triggered releases.
 
-The `DOCKERHUB_TOKEN` repository secret is now configured with Read & Write access only, expiring on 20 April 2027. The token shared in chat was disabled. No token values are stored in this repository. Remote release verification is recorded separately after the workflow runs. The initial public CPU image was published and tested from Docker Desktop.
+The `DOCKERHUB_TOKEN` repository secret is now configured with Read & Write access only, expiring on 20 April 2027. The token shared in chat was disabled. No token values are stored in this repository. The release workflow has passed end to end; its verified run is linked above. The initial public CPU image was published and tested from Docker Desktop.
 
 User instructions require no credentials: [pull and run the public image](SERVING.md#ready-to-run-docker-hub-image--cpu).
 

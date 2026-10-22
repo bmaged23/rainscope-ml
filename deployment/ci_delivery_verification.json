@@ -1,0 +1,26 @@
+{
+  "source_commit": "0549f6b61b005860607ea578bfb46a843fcf3daf",
+  "checked_at_utc": "2026-10-22T20:05:00.357700+00:00",
+  "ci": {
+    "status": "success",
+    "url": "https://github.com/bmaged23/rainscope-ml/actions/runs/39844918468"
+  },
+  "delivery": {
+    "status": "success",
+    "url": "https://github.com/bmaged23/rainscope-ml/actions/runs/39844973128",
+    "verified_steps": [
+      "tests",
+      "image build",
+      "pre-publish predictions",
+      "Docker Hub login",
+      "publish cpu and commit tags",
+      "post-pull predictions"
+    ]
+  },
+  "public": true,
+  "dockerhub_image": "bmaged23/rainscope-ml:cpu",
+  "digest": "sha256:921c29cec522631d595066ba423fb298a3fd07f823d96ca603fedbc30e2bad29",
+  "version_tag": "cpu-0549f6b61b005860607ea578bfb46a843fcf3daf",
+  "platform": "linux/amd64",
+  "gpu_container_verified": false
+}

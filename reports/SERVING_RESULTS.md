@@ -30,3 +30,7 @@ Docker Hub publication and pull validation are recorded in `deployment/dockerhub
 ### Published-image pull test
 
 The public `bmaged23/rainscope-ml:cpu` tag was pulled with an empty Docker credential configuration and matched digest `sha256:76c198dd1567004218dd93b0a0299cd8b0039495fe585e2a2b913c58a48d0b36`. A new Linux amd64 container, running as `appuser` with no host mounts, passed readiness, bundled-model prediction, invalid-input rejection, interactive-docs HTTP, OpenAPI and metrics checks. The two examples returned probabilities 0.02151 and 0.92988 with labels No and Yes. [Test record](dockerhub_pull_test.json). This verifies the documented container path on the reference host, not every OS/architecture or machine configuration. Cached content-addressed layers were reused locally; the registry manifest and public anonymous tag access were checked.
+
+### Remote CI and automated image delivery
+
+Code commit `0549f6b` passed [GitHub CI](https://github.com/bmaged23/rainscope-ml/actions/runs/39844918468), including the container prediction check, and the [Docker Hub delivery workflow](https://github.com/bmaged23/rainscope-ml/actions/runs/39844973128), including pre-publication and post-pull inference. The smoke helper now retries transient Docker port resets during startup, with regression tests; genuine readiness failures still fail the pipeline. Public tags are `cpu` and a source-commit-specific `cpu-<commit>` tag. Current manifest metadata is in `deployment/ci_delivery_verification.json`.

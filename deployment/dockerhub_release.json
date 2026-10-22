@@ -3,16 +3,20 @@
   "url": "https://hub.docker.com/r/bmaged23/rainscope-ml",
   "public": true,
   "published_tags": [
-    "cpu"
+    "cpu",
+    "cpu-0549f6b61b005860607ea578bfb46a843fcf3daf"
   ],
-  "digest": "sha256:76c198dd1567004218dd93b0a0299cd8b0039495fe585e2a2b913c58a48d0b36",
+  "digest": "sha256:921c29cec522631d595066ba423fb298a3fd07f823d96ca603fedbc30e2bad29",
   "platform": "linux/amd64",
-  "compressed_size_bytes": 272025447,
+  "compressed_size_bytes": 271996396,
   "local_offline_prediction_test": "passed",
   "bundled_model_holdout_verification": "passed",
   "fresh_pull_smoke_test": "passed",
   "anonymous_public_pull": "passed",
   "no_host_mounts": true,
   "verified_at_utc": "2026-10-22T19:23:09.864597+00:00",
-  "verification_report": "reports/dockerhub_pull_test.json"
+  "verification_report": "reports/dockerhub_pull_test.json",
+  "initial_locally_published_digest": "sha256:76c198dd1567004218dd93b0a0299cd8b0039495fe585e2a2b913c58a48d0b36",
+  "automated_delivery_verified": true,
+  "delivery_run": "https://github.com/bmaged23/rainscope-ml/actions/runs/39844973128"
 }

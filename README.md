@@ -142,7 +142,7 @@ Open **http://localhost:8000/docs** to submit observations. This runs the API, n
 
 Run local checks with `python -m pip install -r requirements-dev.txt` and `python -m pytest`. GitHub Actions is configured to run lint/tests and build the CPU image, then check real predictions without model mounts on each push or pull request.
 
-A separate release workflow builds and tests an image before publishing it to Docker Hub, then pulls and tests the published commit tag. It requires the maintainer’s `DOCKERHUB_TOKEN` Actions secret, which is now configured. Local tests and the public CPU pull test passed; remote CI and automated delivery are verified separately on their published workflow runs.
+A separate release workflow builds and tests an image before publishing it to Docker Hub, then pulls and tests the published commit tag. It requires the maintainer’s `DOCKERHUB_TOKEN` Actions secret, which is now configured. **Remote checks passed:** [CI tests and container prediction](https://github.com/bmaged23/rainscope-ml/actions/runs/39844918468) and [Docker Hub build/publish/pull verification](https://github.com/bmaged23/rainscope-ml/actions/runs/39844973128). The released CPU image includes its model; GPU container verification is still pending.
 
 [CI/CD workflow and maintainer setup](docs/CI_CD.md) · [GitHub Actions](https://github.com/bmaged23/rainscope-ml/actions)
 
