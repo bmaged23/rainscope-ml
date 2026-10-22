@@ -87,10 +87,23 @@ class TabMModel:
             torch.cuda.empty_cache()
         return self
 
+    def set_serving_device(self, device):
+        """Keep the serving model resident; training evaluation keeps its old lifecycle."""
+        import torch
+
+        if device not in {"cpu", "cuda"}:
+            raise ValueError("Serving device must be cpu or cuda")
+        if device == "cuda" and not torch.cuda.is_available():
+            raise RuntimeError("CUDA requested but unavailable")
+        self.serving_device = device
+        self.model.to(device).eval()
+
     def _predict_array(self, a):
         import torch
 
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = getattr(self, "serving_device", None) or (
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
 
         self.model.to(self.device).eval()
         output = []
@@ -102,7 +115,8 @@ class TabMModel:
 
     def predict_proba(self, x):
         p = self._predict_array(self.preprocessor.transform(x).astype("float32"))
-        self.model.to("cpu")
+        if not getattr(self, "serving_device", None):
+            self.model.to("cpu")
         return np.column_stack([1 - p, p])
 
     def __getstate__(self):

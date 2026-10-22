@@ -16,3 +16,10 @@ artifacts/*
 reports/private/
 
 predictions.csv
+
+# Additional local environments, fitted models and test output
+.venv-*/
+*.joblib
+.coverage
+htmlcov/
+reports/ci-tests.xml

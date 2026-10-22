@@ -1,0 +1,56 @@
+{
+  "climatology": {
+    "verified": true,
+    "fitted_rows": 98892,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  },
+  "logistic": {
+    "verified": true,
+    "fitted_rows": 98892,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  },
+  "random_forest": {
+    "verified": true,
+    "fitted_rows": 98892,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  },
+  "hist_gradient_boosting": {
+    "verified": true,
+    "fitted_rows": 98892,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  },
+  "tabm": {
+    "verified": true,
+    "fitted_rows": 98892,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  },
+  "tabicl_v2": {
+    "verified": true,
+    "fitted_rows": 3000,
+    "checks": [
+      "numeric imputer medians match training recipe",
+      "scaler sample count matches training rows",
+      "category vocabularies match training recipe"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "records": [
+    {
+      "Date": "2016-06-01",
+      "MinTemp": 10.0,
+      "MaxTemp": 20.0,
+      "Rainfall": 0.0,
+      "Evaporation": 3.0,
+      "Sunshine": 9.0,
+      "WindGustSpeed": 35.0,
+      "WindSpeed9am": 10.0,
+      "WindSpeed3pm": 20.0,
+      "Humidity9am": 40.0,
+      "Humidity3pm": 30.0,
+      "Pressure9am": 1020.0,
+      "Pressure3pm": 1022.0,
+      "Cloud9am": 1.0,
+      "Cloud3pm": 1.0,
+      "Temp9am": 12.0,
+      "Temp3pm": 18.0,
+      "Location": "Albury",
+      "WindGustDir": "N",
+      "WindDir9am": "N",
+      "WindDir3pm": "N",
+      "RainToday": "No"
+    },
+    {
+      "Date": "2016-06-01",
+      "MinTemp": 10.0,
+      "MaxTemp": 20.0,
+      "Rainfall": 8.0,
+      "Evaporation": 3.0,
+      "Sunshine": 2.0,
+      "WindGustSpeed": 35.0,
+      "WindSpeed9am": 10.0,
+      "WindSpeed3pm": 20.0,
+      "Humidity9am": 90.0,
+      "Humidity3pm": 85.0,
+      "Pressure9am": 1007.0,
+      "Pressure3pm": 1004.0,
+      "Cloud9am": 7.0,
+      "Cloud3pm": 8.0,
+      "Temp9am": 12.0,
+      "Temp3pm": 18.0,
+      "Location": "Albury",
+      "WindGustDir": "N",
+      "WindDir9am": "N",
+      "WindDir3pm": "N",
+      "RainToday": "Yes"
+    }
+  ]
+}

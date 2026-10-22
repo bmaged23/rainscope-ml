@@ -2,6 +2,9 @@ name: Tests
 on: [push, pull_request]
 jobs:
   test:
+    env:
+      OMP_NUM_THREADS: "2"
+      OPENBLAS_NUM_THREADS: "2"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,3 +15,16 @@ jobs:
       - run: pip install -e . --no-deps
       - run: python -m ruff check --select F src tests app.py scripts
       - run: python -m pytest
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t rainscope-ml:ci .
+      - name: Verify bundled-model prediction
+        run: |
+          docker run -d --name rainscope-ci -p 127.0.0.1:8000:8000 rainscope-ml:ci
+          python3 scripts/smoke_test_api.py
+      - if: always()
+        run: |
+          docker logs rainscope-ci
+          docker rm -f rainscope-ci

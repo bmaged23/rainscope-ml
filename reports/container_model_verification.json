@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "test_rows": 25974,
+  "metrics": {
+    "accuracy": 0.8328713328713329,
+    "balanced_accuracy": 0.7933608135290714,
+    "precision": 0.6152520465316674,
+    "recall": 0.7204843592330978,
+    "f1": 0.6637229839646758,
+    "average_precision": 0.7382889670971876,
+    "roc_auc": 0.8833450063620988,
+    "brier": 0.10518929553919848,
+    "log_loss": 0.33898762347214567,
+    "confusion_matrix": [
+      [
+        17349,
+        2679
+      ],
+      [
+        1662,
+        4284
+      ]
+    ]
+  },
+  "differences_from_recorded_cpu_model": {
+    "accuracy": 0.0,
+    "balanced_accuracy": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "average_precision": 0.0,
+    "roc_auc": 0.0,
+    "brier": 8.326672684688674e-17,
+    "log_loss": 5.551115123125783e-17
+  },
+  "offline_prediction_verified": true
+}

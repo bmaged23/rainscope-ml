@@ -26,7 +26,7 @@ A bounded single-seed search cannot establish a universally best algorithm. Hist
 
 ## Artefacts
 
-Fitted models, including any retained context rows and downloaded checkpoints, remain local and are excluded from Git. The published project contains code and aggregate evaluation evidence, not third-party model weights or raw observations. Load only locally generated model artifacts that you trust.
+Fitted models, including any retained context rows and downloaded checkpoints, remain local and are excluded from Git. The Git repository contains code and aggregate evaluation evidence. The ready-to-run CPU image bundles the project-trained histogram-gradient-boosting pipeline, which is distinct from the TabM winner reported above; it does not include raw observations, retained TabICL context or third-party pretrained checkpoints. Load only locally generated model artifacts that you trust.
 
 ## Authorship
 

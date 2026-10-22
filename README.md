@@ -23,6 +23,22 @@ All results use **25,974 test observations from 2016–2017**. Model and thresho
 
 Higher is better for AP, ROC-AUC, F1, precision and recall; **lower is better for Brier loss**. Orange highlights TabM.
 
+## Model verification
+
+A fresh replay on **22 October 2026** reproduced all six saved models’ holdout metrics within absolute tolerance **1e-5**, without retraining or changing thresholds. A separate artifact audit matched imputation statistics, scaler sample counts and category vocabularies to the frozen training recipe. TabICLv2 uses its original 3,000-row training context.
+
+![Holdout average precision and rain-class F1 with descriptive month-cluster uncertainty intervals](reports/model_verification/quality_verification.png)
+
+These are descriptive 95% month-cluster bootstrap intervals, not evidence of statistically significant superiority. This is the same historical holdout, not an independent new benchmark. An always-no-rain baseline would reach **77.11% accuracy with zero rain recall**, which is why rain-class F1, AP and calibration matter alongside accuracy.
+
+[Verification results, resources and reproducibility commands](reports/model_verification/README.md)
+
+## Validation versus test
+
+Compare all six models on AP, rain-class F1, ROC-AUC and Brier loss. The periods have different rain prevalence, so a difference between validation and test is descriptive; thresholds remain frozen from validation.
+
+![Validation versus test metrics for all six models](reports/figures/validation_vs_test.png)
+
 ## Correlation heatmap
 
 Pearson correlations for numeric weather features and the rain target, calculated on **training observations only** using pairwise non-missing values. Correlation does not establish causation.
@@ -35,17 +51,21 @@ Pearson correlations for numeric weather features and the rain target, calculate
 
 The precision–recall curve shows rain detection versus false alarms; ROC shows ranking across thresholds. The reliability diagram compares predicted probabilities with observed rain frequencies.
 
-## TabM confusion matrix
+## Test errors across all models
 
 At the validation-selected threshold of **0.30**, TabM correctly identifies **4,439 rainy records** and **17,264 non-rainy records**; it misses **1,507 rainy records** and produces **2,764 false alarms**.
 
-![TabM confusion matrix with actual counts](reports/figures/confusion_matrix.png)
+![All six model confusion matrices with counts and within-class percentages](reports/figures/all_models_confusion.png)
 
-## Learning curve
+Rows represent actual classes; percentages are normalized within each row. The rain-row diagonal is rain recall. The climatology threshold predicts rain for every observation, making its false-alarm behavior explicit.
 
-Recorded training and validation losses across **40 epochs**. The dashed line marks the checkpoint retained by validation log loss; test data was not used for early stopping. Training loss is a batch mean measured with training-time dropout enabled.
+## Training process
 
-![TabM training and validation loss with retained checkpoint](reports/figures/learning_curve.png)
+Recorded TabM training and validation losses across **40 epochs**, alongside training-row budgets, fit times and validation model selection for all six models. The dashed line marks **retained epoch 37**, using the original minimum-improvement rule; test data was not used for early stopping. Training loss is a batch mean measured with training-time dropout enabled.
+
+Only TabM has recorded epoch-level history. The other models are represented by their measured fit durations and validation results; TabICLv2’s 3,000-row context is not equivalent to training a neural model from scratch.
+
+![Training history, row budgets, fit durations and validation model selection](reports/figures/training_process.png)
 
 ## Performance across months and stations
 
@@ -91,8 +111,50 @@ Reference GPU: **NVIDIA GTX 1660 Ti, 6 GB**. These are measured in-process wall 
 
 TabICLv2 performs in-context computation during prediction, so its short fit time does not mean cheap inference. [RAM, CPU and PyTorch-memory measurements](reports/resources.json) include interpreter/resident-model overhead; they are not isolated per-model memory requirements.
 
+![All-model quality versus batch prediction time](reports/figures/quality_latency_tradeoff.png)
+
+The scatter uses the fresh saved-model verification run, while the table above records the original experiment. Its horizontal axis is logarithmic and measures prediction of the **entire 25,974-row test set**, not one HTTP request. Hardware, preprocessing and context computation affect these timings.
+
+## Prediction API and deployment
+
+The project now includes a **FastAPI prediction service**, interactive API docs, GPU/CPU Docker configurations, readiness checks and Prometheus-text counters. The main GPU service uses the trained TabM winner; a separately trained CPU baseline supports machines without CUDA. The complete CPU image bundles its fitted model; the GPU source-build route uses a local trained artifact.
+
+A local GPU run of 200 sequential HTTP requests (two synthetic records each) measured **20.5 ms median / 23.4 ms p95** and approximately **803 MiB sampled server RAM**. These are local serving measurements, not production guarantees.
+
+[Run the API and Docker demo](docs/SERVING.md) · [Measured HTTP latency and resources](reports/SERVING_RESULTS.md) · [Example request](deployment/example_request.json)
+
+## Docker Hub — run without Python setup
+
+The **CPU API image** includes the trained histogram-gradient-boosting model and its preprocessing. It does not require a model mount, dataset download or training at startup. Supported release target: **Linux amd64**, including compatible Windows Docker Desktop/WSL2 installations.
+
+```bash
+docker pull bmaged23/rainscope-ml:cpu
+docker run -d --name rainscope -p 127.0.0.1:8000:8000 bmaged23/rainscope-ml:cpu
+```
+
+Open **http://localhost:8000/docs** to submit observations. This runs the API, not the Streamlit dashboard, and it does not fetch live weather. [Docker Hub](https://hub.docker.com/r/bmaged23/rainscope-ml) · [Example request, checks and cleanup](docs/SERVING.md) · [Release verification status](reports/SERVING_RESULTS.md)
+
+## Quick start — CPU
+
+Requires Python 3.13 and Git. From a Linux/WSL terminal:
+
+```bash
+git clone https://github.com/bmaged23/rainscope-ml.git
+cd rainscope-ml
+python3.13 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e . --no-deps
+python scripts/download_data.py
+python -m rainscope.train --root . --config configs/cpu.json
+python -m streamlit run app.py
+```
+
+Open **http://localhost:8501** after training finishes. This trains four CPU baselines and creates the prediction artifact locally. To reproduce the six-model GPU study, use `requirements-modern.txt` and `config.json` as explained in the [complete setup guide](docs/GETTING_STARTED.md), which also includes Windows commands, the API, tests and troubleshooting.
+
 ## Reproduce and explore
 
 [Installation, training and dashboard](docs/GETTING_STARTED.md) · [Configuration](config.json) · [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Model card](docs/MODEL_CARD.md)
 
-This is a single-seed historical study with shared stations across time, not an operational weather service or an unseen-station benchmark. The rebuilt implementation preserves the [original repository's attribution](docs/ATTRIBUTION.md) and [GPL-3.0 licence](LICENSE); raw observations and model weights are not republished.
+This is a single-seed historical study with shared stations across time, not an operational weather service or an unseen-station benchmark. The rebuilt implementation preserves the [original repository's attribution](docs/ATTRIBUTION.md) and [GPL-3.0 licence](LICENSE); raw observations are not republished. The CPU container includes the project-trained serving model; Git excludes model binaries.

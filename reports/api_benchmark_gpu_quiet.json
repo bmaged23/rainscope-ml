@@ -1,0 +1,24 @@
+{
+  "measured_at_utc": "2026-10-22T18:09:56.978981+00:00",
+  "protocol": "sequential HTTP, two synthetic records/request, warmup excluded; no accuracy claim",
+  "requests": 200,
+  "warmup": 5,
+  "model": {
+    "name": "tabm",
+    "threshold": 0.3,
+    "model_sha256": "9fa07d9a8bea24c35a4a05caa32b658020a35bffea597c659d278691e93876fd",
+    "max_batch_rows": 256,
+    "device": "cuda"
+  },
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "latency_ms": {
+    "p50": 20.548519000158194,
+    "p95": 23.415588150146505,
+    "p99": 28.47274722999827
+  },
+  "requests_per_second": 47.46939886982246,
+  "sampled_server_max_rss_mib": 802.859375,
+  "server_cpu_percent_one_core_basis": 95.17614473399398,
+  "estimated_eur_per_1000_requests_at_measured_saturation": null,
+  "limitations": "RSS sampled between requests can miss peaks. CPU may exceed 100% with multiple cores. Cost excludes idle time, storage and network. No GPU memory measurement here."
+}

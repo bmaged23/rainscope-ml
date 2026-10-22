@@ -1,0 +1,11 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    volumes:
+      - ./artifacts:/models:ro
+    environment:
+      RAINSCOPE_MODEL: /models/selected_model.joblib
+      RAINSCOPE_DEVICE: cuda
+    gpus: all
