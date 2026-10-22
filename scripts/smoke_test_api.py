@@ -1,11 +1,27 @@
 """Verify a running release image serves its bundled model and useful outputs."""
 
 import argparse
+import http.client
 import json
 import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+
+def wait_for_ready(call, attempts=60, delay=1):
+    """Docker may accept/reset connections before the application is listening."""
+    for attempt in range(attempts):
+        try:
+            return call("/health/ready")
+        except urllib.error.HTTPError as exc:
+            if exc.code != 503 or attempt == attempts - 1:
+                raise
+        except (urllib.error.URLError, OSError, http.client.HTTPException):
+            if attempt == attempts - 1:
+                raise
+        time.sleep(delay)
+    raise ValueError("attempts must be positive")
 
 
 def main():
@@ -23,14 +39,7 @@ def main():
         with urllib.request.urlopen(req, timeout=20) as response:
             return json.load(response)
 
-    for attempt in range(60):
-        try:
-            ready = call("/health/ready")
-            break
-        except (urllib.error.URLError, TimeoutError):
-            if attempt == 59:
-                raise
-            time.sleep(1)
+    ready = wait_for_ready(call)
     model = call("/model")
     assert model["name"] == "hist_gradient_boosting" and model["device"] == "cpu"
     request = json.loads((root / "deployment/example_request.json").read_text())
